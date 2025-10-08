@@ -27,9 +27,9 @@ bank = SecureOnlineBanking()
 def create_test_users():
     """Create test users for demonstration"""
     test_users = [
-        ('admin', 'password123', 'admin@bank.com'),
-        ('user1', 'password123', 'user1@bank.com'),
-        ('alice', 'password123', 'alice@bank.com')
+        ('admin', 'password1234', 'admin@bank.com'),
+        ('user1', 'password1234', 'user1@bank.com'),
+        ('alice', 'password1234', 'alice@bank.com')
     ]
 
     for username, password, email in test_users:
