@@ -3,6 +3,7 @@ import sys
 import os
 import json
 from datetime import datetime
+from flask_cors import CORS
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
@@ -10,8 +11,37 @@ from src.banking_core import SecureOnlineBanking
 from src.performance_reporter import PerformanceReporter
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-123'  # Needed for flask sessions
+CORS(app)  # Enable CORS for all routes
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-123')  # Use environment variable
+
+# Configure Flask sessions for production
+app.config.update(
+    SESSION_COOKIE_SECURE=True,  # Only send cookies over HTTPS
+    SESSION_COOKIE_HTTPONLY=True,  # Prevent JavaScript access to cookies
+    SESSION_COOKIE_SAMESITE='Lax',  # CSRF protection
+    PERMANENT_SESSION_LIFETIME=1800  # 30 minutes
+)
 bank = SecureOnlineBanking()
+
+# Create test users if they don't exist
+def create_test_users():
+    """Create test users for demonstration"""
+    test_users = [
+        ('admin', 'password123', 'admin@bank.com'),
+        ('user1', 'password123', 'user1@bank.com'),
+        ('alice', 'password123', 'alice@bank.com')
+    ]
+
+    for username, password, email in test_users:
+        try:
+            if not bank.db.get_user(username):
+                bank.register_user(username, password, email)
+                print(f"Created test user: {username}")
+        except Exception as e:
+            print(f"Error creating user {username}: {e}")
+
+# Initialize test users
+create_test_users()
 
 # Main dashboard HTML
 DASHBOARD_HTML = '''
@@ -387,18 +417,29 @@ def register():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
+    if not data:
+        return jsonify({'success': False, 'message': 'No data provided'})
+    
     try:
-        session_id = bank.authenticate_user(data['username'], data['password'], data['otp'])
+        username = data.get('username')
+        password = data.get('password')
+        otp = data.get('otp')
+        
+        if not all([username, password, otp]):
+            return jsonify({'success': False, 'message': 'Missing required fields'})
+        
+        session_id = bank.authenticate_user(username, password, otp)
         
         if session_id:
             # Store session in flask session
             flask_session['user_session'] = session_id
-            flask_session['username'] = data['username']
+            flask_session['username'] = username
             
             # Get user data for the dashboard
-            user = bank.users[data['username']]
-            flask_session['email'] = user.email
-            flask_session['registration_date'] = user.registration_date.strftime('%Y-%m-%d %H:%M:%S')
+            user = bank.users.get(username)
+            if user:
+                flask_session['email'] = user.email
+                flask_session['registration_date'] = user.registration_date.strftime('%Y-%m-%d %H:%M:%S')
             
             return jsonify({
                 'success': True, 
@@ -407,6 +448,10 @@ def login():
             })
         else:
             return jsonify({'success': False, 'message': 'Invalid credentials'})
+            
+    except Exception as e:
+        print(f"Login error: {e}")
+        return jsonify({'success': False, 'message': 'Login failed due to server error'})
             
     except Exception as e:
         return jsonify({'success': False, 'message': f'System error: {str(e)}'})
