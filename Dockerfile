@@ -14,8 +14,8 @@ RUN mkdir -p /tmp && chmod 777 /tmp
 COPY requirements.txt .
 
 # Install Python dependencies and gunicorn for production
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir flask gunicorn flask-cors
+RUN pip install --no-cache-dir --root-user-action=ignore -r requirements.txt && \
+    pip install --no-cache-dir --root-user-action=ignore flask gunicorn flask-cors
 
 # Copy the entire project
 COPY . .
