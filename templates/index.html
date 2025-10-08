@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Banking System</title>
+</head>
+<body>
+    <h1>Secure Banking Login</h1>
+    <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="text" name="otp" placeholder="OTP Code" required>
+        <button type="submit">Login</button>
+    </form>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            const result = await response.json();
+            document.getElementById('result').innerHTML = result.status === 'success' 
+                ? '✅ Login successful!' 
+                : '❌ Login failed: ' + result.message;
+        });
+    </script>
+</body>
+</html>

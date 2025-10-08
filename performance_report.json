@@ -1,0 +1,178 @@
+{
+  "timestamp": "2025-10-04T15:21:08.749246",
+  "system_metrics": {
+    "cpu_percent": 100.0,
+    "memory_usage_mb": 6654.015625,
+    "memory_percent": 82.4,
+    "disk_usage_percent": 35.6
+  },
+  "crypto_performance": {
+    "generate_rsa_keypair": {
+      "call_count": 1,
+      "avg_time_ms": 202.81076431274414,
+      "min_time_ms": 202.81076431274414,
+      "max_time_ms": 202.81076431274414,
+      "p95_time_ms": 202.81076431274414
+    },
+    "hash_password": {
+      "call_count": 3,
+      "avg_time_ms": 164.18075561523438,
+      "min_time_ms": 160.85004806518555,
+      "max_time_ms": 167.8450107574463,
+      "p95_time_ms": 167.8450107574463
+    },
+    "verify_password": {
+      "call_count": 1,
+      "avg_time_ms": 164.84642028808594,
+      "min_time_ms": 164.84642028808594,
+      "max_time_ms": 164.84642028808594,
+      "p95_time_ms": 164.84642028808594
+    }
+  },
+  "protocol_performance": {
+    "derive_session_keys": {
+      "call_count": 1,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "perform_tls_handshake": {
+      "call_count": 1,
+      "avg_time_ms": 188.82393836975098,
+      "min_time_ms": 188.82393836975098,
+      "max_time_ms": 188.82393836975098,
+      "p95_time_ms": 188.82393836975098
+    },
+    "encrypt_message": {
+      "call_count": 2,
+      "avg_time_ms": 1.4973878860473633,
+      "min_time_ms": 0.9973049163818359,
+      "max_time_ms": 1.9974708557128906,
+      "p95_time_ms": 1.9974708557128906
+    },
+    "decrypt_message": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "close_session": {
+      "call_count": 1,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    }
+  },
+  "auth_performance": {
+    "enable_mfa_for_user": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "generate_totp": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "verify_totp": {
+      "call_count": 1,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    }
+  },
+  "banking_performance": {
+    "register_user": {
+      "call_count": 2,
+      "avg_time_ms": 165.34626483917236,
+      "min_time_ms": 160.85004806518555,
+      "max_time_ms": 169.84248161315918,
+      "p95_time_ms": 169.84248161315918
+    },
+    "create_secure_session": {
+      "call_count": 1,
+      "avg_time_ms": 188.82393836975098,
+      "min_time_ms": 188.82393836975098,
+      "max_time_ms": 188.82393836975098,
+      "p95_time_ms": 188.82393836975098
+    },
+    "authenticate_user": {
+      "call_count": 1,
+      "avg_time_ms": 354.66933250427246,
+      "min_time_ms": 354.66933250427246,
+      "max_time_ms": 354.66933250427246,
+      "p95_time_ms": 354.66933250427246
+    },
+    "validate_session": {
+      "call_count": 5,
+      "avg_time_ms": 0.2002239227294922,
+      "min_time_ms": 0.0,
+      "max_time_ms": 1.001119613647461,
+      "p95_time_ms": 1.001119613647461
+    },
+    "verify_transaction_integrity": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "execute_transaction": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "compute_transaction_hash": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "log_transaction": {
+      "call_count": 2,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    },
+    "process_transaction": {
+      "call_count": 2,
+      "avg_time_ms": 0.9986162185668945,
+      "min_time_ms": 0.9977817535400391,
+      "max_time_ms": 0.99945068359375,
+      "p95_time_ms": 0.99945068359375
+    },
+    "get_user_balance": {
+      "call_count": 2,
+      "avg_time_ms": 0.5005598068237305,
+      "min_time_ms": 0.0,
+      "max_time_ms": 1.001119613647461,
+      "p95_time_ms": 1.001119613647461
+    },
+    "get_transaction_history": {
+      "call_count": 1,
+      "avg_time_ms": 0.9992122650146484,
+      "min_time_ms": 0.9992122650146484,
+      "max_time_ms": 0.9992122650146484,
+      "p95_time_ms": 0.9992122650146484
+    },
+    "logout_user": {
+      "call_count": 1,
+      "avg_time_ms": 0.0,
+      "min_time_ms": 0.0,
+      "max_time_ms": 0.0,
+      "p95_time_ms": 0.0
+    }
+  }
+}
