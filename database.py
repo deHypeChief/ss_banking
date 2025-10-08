@@ -1,13 +1,32 @@
 # Add database.py
 import sqlite3
 import json
+import os
 from datetime import datetime
 from typing import Dict, Optional, List
 
 class BankDatabase:
-    def __init__(self, db_path='banking.db'):
-        self.conn = sqlite3.connect(db_path, check_same_thread=False)
-        self.create_tables()
+    def __init__(self, db_path=None):
+        if db_path is None:
+            # Use /tmp for writable location in containers, or current dir for local development
+            if os.path.exists('/tmp'):
+                db_path = '/tmp/banking.db'
+            else:
+                db_path = 'banking.db'
+
+        # Ensure the directory exists
+        db_dir = os.path.dirname(db_path)
+        if db_dir and not os.path.exists(db_dir):
+            os.makedirs(db_dir, exist_ok=True)
+
+        try:
+            self.conn = sqlite3.connect(db_path, check_same_thread=False)
+            self.create_tables()
+        except sqlite3.OperationalError as e:
+            print(f"Database connection failed: {e}")
+            # Fallback to in-memory database for development/testing
+            self.conn = sqlite3.connect(':memory:', check_same_thread=False)
+            self.create_tables()
 
     def create_tables(self):
         # Users table

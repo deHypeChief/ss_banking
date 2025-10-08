@@ -7,6 +7,9 @@ RUN useradd --create-home --shell /bin/bash app
 # Set working directory
 WORKDIR /app
 
+# Create tmp directory and ensure permissions
+RUN mkdir -p /tmp && chmod 777 /tmp
+
 # Copy requirements file
 COPY requirements.txt .
 

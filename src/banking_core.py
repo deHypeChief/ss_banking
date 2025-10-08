@@ -190,33 +190,76 @@ class SecureOnlineBanking:
     @PerformanceMonitor.measure_time
     def execute_transaction(self, transaction: Transaction):
         """Execute the financial transaction"""
-        username = self.sessions[transaction.session_id].username
-        user_data = self.users[username]
-        
+        # Get session from database
+        session_db = self.db.get_session(transaction.session_id)
+        if not session_db:
+            raise ValueError("Invalid session")
+
+        username = session_db['username']
+
+        # Get user from database
+        user_db = self.db.get_user(username)
+        if not user_db:
+            raise ValueError("User not found")
+
+        current_balance = user_db['account_balance']
+
         if transaction.type == TransactionType.DEPOSIT:
-            user_data.account_balance += transaction.amount
+            new_balance = current_balance + transaction.amount
         elif transaction.type == TransactionType.WITHDRAWAL:
-            if user_data.account_balance >= transaction.amount:
-                user_data.account_balance -= transaction.amount
+            if current_balance >= transaction.amount:
+                new_balance = current_balance - transaction.amount
             else:
                 raise ValueError("Insufficient funds")
-        
-        # Add to transaction history
-        user_data.transaction_history.append(transaction.transaction_id)
+        elif transaction.type == TransactionType.TRANSFER:
+            # For transfers, we need to handle both sender and receiver
+            # This is simplified - in real banking, this would be more complex
+            if current_balance >= transaction.amount:
+                new_balance = current_balance - transaction.amount
+                # Note: Receiver balance update would happen separately
+            else:
+                raise ValueError("Insufficient funds")
+        else:
+            raise ValueError("Invalid transaction type")
+
+        # Update balance in database
+        self.db.update_balance(username, new_balance)
+
+        # Record transaction in database
+        self.db.add_transaction(
+            username=username,
+            transaction_type=transaction.type.value,
+            amount=transaction.amount,
+            to_account=getattr(transaction, 'to_account', None),
+            description=getattr(transaction, 'description', None)
+        )
+
+        # Update cache
+        if username in self.users_cache:
+            self.users_cache[username].account_balance = new_balance
+
+        return True
     
     @PerformanceMonitor.measure_time
     def log_transaction(self, transaction: Transaction):
         """Log transaction to immutable audit trail"""
+        # Get session from database
+        session_db = self.db.get_session(transaction.session_id)
+        if not session_db:
+            username = "UNKNOWN"
+        else:
+            username = session_db['username']
+
         audit_entry = {
             'transaction_id': transaction.transaction_id,
             'type': transaction.type.value,
             'amount': transaction.amount,
             'timestamp': datetime.now().isoformat(),
-            'user': self.sessions[transaction.session_id].username,
+            'user': username,
             'hash': self.compute_transaction_hash(transaction),
             'event': 'TRANSACTION_PROCESSED'
         }
-        
+
         self.audit_trail.append(audit_entry)
     
     @PerformanceMonitor.measure_time
